@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../../environments/environment';
+import { Observable, from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +11,27 @@ export class SupabaseService {
 
   constructor() {
     this.supabase = createClient(
-      'https://nthtncabtsotgnzolywo.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50aHRuY2FidHNvdGduem9seXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkwNDAzMDQsImV4cCI6MjA1NDYxNjMwNH0.UE0S07819FIlbKFusQBYCratk_95lxQW2i1oITaIU2c'
+      environment.supabase.url,
+      environment.supabase.anonKey
+    );
+  }
+
+  updateLastAccess(): Observable<any> {
+    return from(this.supabase.rpc('update_last_access'));
+  }
+
+  callUpdateInternalData(): Observable<any> {
+    const headers = {
+      'Authorization': `Bearer ${environment.supabase.anonKey}`,
+      'Content-Type': 'application/json'
+    };
+
+    return from(
+      fetch(`${environment.supabase.url}/functions/v1/update-internal-data`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({}) // Add request body if needed
+      }).then(response => response.json())
     );
   }
 
@@ -20,14 +41,6 @@ export class SupabaseService {
       .select('*');
 
     if (error) throw error;
-
-    if (data) {
-      return data.map(product => ({
-        ...product,
-        image: product.image || 'https://via.placeholder.com/300x300?text=No+Image'
-      }));
-    }
-
-    return [];
+    return data || [];
   }
 }

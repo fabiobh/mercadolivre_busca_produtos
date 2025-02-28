@@ -137,9 +137,9 @@ def update_internal_data():
 if __name__ == "__main__":
     login()
     login_check()
-    '''
+    
     categoria_celular = "MLB1055"
     categoria_portateis_notebook = "MLB1652"
     save_products(query="iphone_xs_max", min_price=400, max_price=1000, category=categoria_celular)
     save_products(query="1035g1", min_price=700, max_price=1500, category=categoria_portateis_notebook)
-    '''
+    
