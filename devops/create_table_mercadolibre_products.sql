@@ -12,7 +12,7 @@ create table mercadolibre_products (
 /* Adding disable column to track
    product availability status */
 ALTER TABLE mercadolibre_products
-ADD COLUMN disable boolean DEFAULT false NOT NULL;
+ADD COLUMN hide boolean DEFAULT false NOT NULL;
 
 /* only used to maintain the system awake on free version of Supabase */
 create table internal_data_update (
@@ -22,3 +22,10 @@ create table internal_data_update (
 
 insert into internal_data_update (last_update) values (now());
 update internal_data_update set last_update = now() where id = 1;
+
+/* Adding alert_submitted column to check
+   if an alert was submitted for a product */
+ALTER TABLE mercadolibre_products
+ADD COLUMN alert_submitted boolean DEFAULT false NOT NULL;
+
+mercadolibre_searchs

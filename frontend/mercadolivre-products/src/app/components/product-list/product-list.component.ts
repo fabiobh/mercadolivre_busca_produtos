@@ -1,23 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  permalink: string;
-  thumbnail: string;
-  query: string;  // Add query field
-}
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   template: `
     <div class="container mx-auto p-4">
-      <h1 class="text-2xl font-bold mb-4">Mercado Livre Products</h1>
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Mercado Livre Products</h1>
+        <div class="space-x-2">
+          <a routerLink="/searches" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Histórico de Pesquisas
+          </a>
+          <a routerLink="/add-product" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Adicionar Produto
+          </a>
+        </div>
+      </div>
+      
       <div *ngFor="let group of groupedProducts | keyvalue" class="mb-8">
         <h2 class="text-xl font-bold mb-4 text-gray-700">Busca: "{{ group.key }}"</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

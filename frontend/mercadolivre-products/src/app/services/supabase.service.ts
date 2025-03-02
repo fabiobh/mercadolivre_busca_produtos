@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { Observable, from } from 'rxjs';
+import { Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,38 @@ export class SupabaseService {
     );
   }
 
-  async getProducts() {
+  async getProducts(): Promise<Product[]> {
     const { data, error } = await this.supabase
       .from('mercadolibre_products')
       .select('*');
+
+    if (error) throw error;
+    return data || [];
+  }
+  
+  insertProduct(product: Product): Observable<any> {
+    return from(
+      this.supabase
+        .from('mercadolibre_products')
+        .insert(product)
+        .select()
+    );
+  }
+  
+  insertProducts(products: Product[]): Observable<any> {
+    return from(
+      this.supabase
+        .from('mercadolibre_products')
+        .insert(products)
+        .select()
+    );
+  }
+
+  async getSearches(): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('mercadolibre_searchs')
+      .select('*')
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
     return data || [];
